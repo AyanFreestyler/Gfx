@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<<link rel="manifest" href="manifest.json">
+    >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GFX Tool (Prank)</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #2d2d2d;
+            color: white;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        #gfx-tool {
+            text-align: center;
+            padding: 20px;
+            height: 100vh;
+            background: radial-gradient(circle, rgba(0,0,0,0.8), rgba(0,0,0,1) 80%), rgba(0,0,255,0.5);
+            position: relative;
+        }
+        #gfx-tool h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        #gfx-tool p {
+            font-size: 1.2em;
+            text-transform: uppercase;
+        }
+        .tool-options {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(68, 68, 68, 0.9);
+            border-radius: 8px;
+        }
+        #gfx-tool button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            text-transform: uppercase;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        #gfx-tool button:hover {
+            background-color: #45a049;
+        }
+        #gfx-tool button:active {
+            transform: scale(0.95);
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        .slider-container label {
+            font-size: 1.1em;
+            text-transform: uppercase;
+        }
+        .slider-container input {
+            width: 100%;
+        }
+        #birthday-surprise {
+            display: none;
+            background-color: #ffef82;
+            color: #ff4081;
+            padding: 50px;
+            position: relative;
+            opacity: 1;
+            transition: opacity 1s ease;
+            text-align: center;
+        }
+        #birthday-surprise h1 {
+            font-size: 3em;
+            text-transform: uppercase;
+        }
+        #birthday-surprise img {
+            margin-top: 20px;
+            width: 300px;
+        }
+        #gifts-container {
+            margin-top: 30px;
+        }
+        .gift-button {
+            font-size: 2em;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+            color: #ff4081;
+            transition: transform 0.1s;
+        }
+        .gift-button:active {
+            transform: scale(0.9);
+        }
+        .quote-container {
+            margin-top: 20px;
+            display: none;
+        }
+        .quote-container p {
+            font-size: 1.2em;
+            text-transform: uppercase;
+        }
+        .candle {
+            width: 30px;
+            height: 60px;
+            background-color: #f9d1d1;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+            margin: 0 auto;
+            display: inline-block;
+        }
+        .candle::before {
+            content: '';
+            width: 6px;
+            height: 10px;
+            background-color: #f3c6c6;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -10px;
+            border-radius: 0 0 10px 10px;
+        }
+        .flame {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid #ff8c00;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -25px;
+            border-radius: 10px 10px 0 0;
+            animation: flicker 0.5s infinite;
+        }
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 0.5;
+                transform: translateY(-5px);
+            }
+        }
+        .popup-message {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+        .popup-message.show {
+            display: block;
+            animation: fadeInOut 2s forwards;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .balloon {
+            width: 50px;
+            height: 80px;
+            background-color: #ff4081;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: balloonUp 2s ease-in-out;
+        }
+        @keyframes balloonUp {
+            0% { bottom: 50px; }
+            100% { bottom: 200px; opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Initial GFX Tool Interface -->
+    <div id="gfx-tool">
+        <div class="popup-message" id="popup-message">SUCCESS ✅</div>
+        <h1>WELCOME TO GFX TOOL PRO</h1>
+        <p>ADJUST THE SETTINGS AND OPTIONS BELOW TO OPTIMIZE YOUR GRAPHICS!</p>
+        
+        <div class="tool-options">
+            <div>
+                <label>GRAPHICS SETTINGS:</label>
+                <button id="resolutions-button">RESOLUTIONS ></button>
+                <button id="fps-button">FPS ></button>
+                <button id="bearbox-button">BEARBOX ></button>
+            </div>
+            <div class="slider-container">
+                <label>SMOOTHNESS:</label>
+                <input type="range" min="0" max="100" value="50">
+            </div>
+            <div class="slider-container">
+                <label>TOUCH SENSI +:</label>
+                <input type="range" min="0" max="100" value="50">
+            </div>
+            <button id="apply-button">SAVE AND APPLY</button>
+        </div>
+    </div>
+
+    <!-- Birthday Surprise Interface -->
+    <div id="birthday-surprise">
+        <h1>🎉 HAPPY BIRTHDAY, KALPANA! 🎉</h1>
+        <p>SURPRISE! THIS ISN'T A GFX TOOL; IT'S A SPECIAL APP JUST FOR YOU!</p>
+        <img src="https://assets.onecompiler.app/42rew9gnm/42rewdzba/ai-generated-cartoon-birthday-cake-transparent-background-free-png.png" alt="Balloons">
+        <p>I LOVE YOU AND HOPE YOU HAVE AN AMAZING BIRTHDAY FILLED WITH JOY AND LAUGHTER!</p>
+        <p>CLICK THE GIFTS BELOW TO REVEAL MORE SURPRISES!</p>
+        <div id="gifts-container">
+            <button class="gift-button" onclick="showQuote()">🎁</button>
+            <button class="gift-button" onclick="showQuote()">🎁</button>
+            <button class="gift-button" onclick="showQuote()">🎁</button>
+        </div>
+        <div id="quote-container" class="quote-container"></div>
+        <div class="candle">
+            <div class="flame"></div>
+        </div>
+    </div>
+
+    <script>
+        const quotes = [
+            "YOU ARE THE LOVE OF MY LIFE.",
+            "I NEVER KNEW HOW MUCH I LOVED YOU UNTIL I MET YOU.",
+            "EVERY MOMENT WITH YOU IS A TREASURE.",
+            "YOU MAKE MY HEART SMILE.",
+            "I LOVE YOU MORE THAN WORDS CAN EXPRESS.",
+            "YOU ARE MY SUNSHINE.",
+            "MY LIFE IS BETTER WITH YOU IN IT.",
+            "YOU COMPLETE ME.",
+            "I AM SO GRATEFUL FOR YOU.",
+            "YOU ARE MY BEST FRIEND AND MY LOVE.",
+            "I AM ALWAYS HERE FOR YOU.",
+            "YOU ARE MY EVERYTHING.",
+            "YOU MAKE MY WORLD A BETTER PLACE.",
+            "I CAN'T IMAGINE LIFE WITHOUT YOU.",
+            "YOU ARE MY HEART'S DESIRE.",
+            "EVERY DAY WITH YOU IS A GIFT.",
+            "YOU MAKE ME A BETTER PERSON.",
+            "YOU ARE THE REASON I SMILE.",
+            "I LOVE YOU TO THE MOON AND BACK.",
+            "YOU ARE MY FOREVER.",
+            "YOU LIGHT UP MY LIFE.",
+            "WITH YOU, EVERY DAY IS A SPECIAL DAY.",
+            "YOU ARE MY DREAM COME TRUE.",
+            "I CHERISH EVERY MOMENT WITH YOU.",
+            "YOU ARE MY SOULMATE.",
+            "I CAN’T IMAGINE LIFE WITHOUT YOUR LOVE.",
+            "YOU BRING OUT THE BEST IN ME.",
+            "YOU ARE MY ONE AND ONLY.",
+            "I ADMIRE YOUR STRENGTH AND BEAUTY.",
+            "YOU ARE MY SUN AND STARS.",
+            "I AM BLESSED TO HAVE YOU IN MY LIFE.",
+            "YOU ARE MY EVERYTHING.",
+            "YOU MAKE MY HEART SOAR.",
+            "YOU ARE MY LIFE’S MOST PRECIOUS GIFT.",
+            "YOU ARE MY HAPPY PLACE.",
+            "I CAN’T WAIT TO SPEND FOREVER WITH YOU.",
+            "YOU MAKE ME FEEL SPECIAL EVERY DAY.",
+            "YOU ARE MY ROCK.",
+            "I WILL LOVE YOU FOREVER.",
+            "YOU ARE MY EVERYTHING.",
+            "YOU COMPLETE MY LIFE.",
+            "I AM SO THANKFUL FOR YOU.",
+            "YOU ARE MY BEST FRIEND AND LOVE.",
+            "YOU ARE MY DREAM COME TRUE.",
+            "YOU ARE MY ONE AND ONLY LOVE.",
+            "YOU MAKE MY LIFE WORTHWHILE.",
+            "I AM GRATEFUL FOR EVERY MOMENT WITH YOU."
+        ];
+
+        const quotesContainer = document.getElementById('quote-container');
+        const birthdaySurprise = document.getElementById('birthday-surprise');
+        const gfxTool = document.getElementById('gfx-tool');
+        const popupMessage = document.getElementById('popup-message');
+
+        document.getElementById('resolutions-button').addEventListener('click', showSuccess);
+        document.getElementById('fps-button').addEventListener('click', showSuccess);
+        document.getElementById('bearbox-button').addEventListener('click', showSuccess);
+        document.getElementById('apply-button').addEventListener('click', showBalloon);
+
+        function showSuccess() {
+            popupMessage.classList.add('show');
+            setTimeout(() => popupMessage.classList.remove('show'), 2000);
+        }
+
+        function showBalloon() {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            document.body.appendChild(balloon);
+            setTimeout(() => balloon.remove(), 2000);
+            setTimeout(() => {
+                gfxTool.style.display = 'none';
+                birthdaySurprise.style.display = 'block';
+            }, 2000);
+        }
+
+        function showQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quote = quotes[randomIndex];
+            quotesContainer.innerHTML = `<p>${quote}</p>`;
+            quotesContainer.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then((registration) => console.log('Service Worker registered'))
+      .catch((error) => console.log('Service Worker registration failed', error));
+  }
+</script>
